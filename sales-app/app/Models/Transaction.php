@@ -9,28 +9,25 @@ class Transaction extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
+        'nomor_transaksi',
+        'jenis_transaksi',
         'user_id',
-        'type',
-        'total',
+        'total_amount',
+        'keterangan',
+        'tanggal_transaksi',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'total' => 'decimal:2',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'total_amount' => 'decimal:2',
+            'tanggal_transaksi' => 'datetime',
+        ];
+    }
 
     /**
-     * Get the user that owns the transaction.
+     * Relasi dengan user
      */
     public function user()
     {
@@ -38,7 +35,7 @@ class Transaction extends Model
     }
 
     /**
-     * Get the transaction details for the transaction.
+     * Relasi dengan transaction details
      */
     public function transactionDetails()
     {
@@ -46,26 +43,39 @@ class Transaction extends Model
     }
 
     /**
-     * Get the products for the transaction through transaction details.
+     * Generate nomor transaksi
      */
-    public function products()
+    public static function generateNomorTransaksi($jenis)
     {
-        return $this->hasManyThrough(Product::class, TransactionDetail::class);
+        $prefix = $jenis === 'penjualan' ? 'PJ' : 'PB';
+        $date = date('Ymd');
+        $lastTransaction = self::where('nomor_transaksi', 'like', $prefix . $date . '%')
+                              ->orderBy('nomor_transaksi', 'desc')
+                              ->first();
+        
+        if ($lastTransaction) {
+            $lastNumber = intval(substr($lastTransaction->nomor_transaksi, -4));
+            $newNumber = $lastNumber + 1;
+        } else {
+            $newNumber = 1;
+        }
+        
+        return $prefix . $date . str_pad($newNumber, 4, '0', STR_PAD_LEFT);
     }
 
     /**
-     * Check if transaction is penjualan.
+     * Check if transaction is sale
      */
     public function isPenjualan()
     {
-        return $this->type === 'penjualan';
+        return $this->jenis_transaksi === 'penjualan';
     }
 
     /**
-     * Check if transaction is pembelian.
+     * Check if transaction is purchase
      */
     public function isPembelian()
     {
-        return $this->type === 'pembelian';
+        return $this->jenis_transaksi === 'pembelian';
     }
 }

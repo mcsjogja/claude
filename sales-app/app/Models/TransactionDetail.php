@@ -9,31 +9,25 @@ class TransactionDetail extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'transaction_id',
         'product_id',
         'quantity',
-        'price',
+        'harga_satuan',
         'subtotal',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'price' => 'decimal:2',
-        'subtotal' => 'decimal:2',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'quantity' => 'integer',
+            'harga_satuan' => 'decimal:2',
+            'subtotal' => 'decimal:2',
+        ];
+    }
 
     /**
-     * Get the transaction that owns the transaction detail.
+     * Relasi dengan transaction
      */
     public function transaction()
     {
@@ -41,10 +35,20 @@ class TransactionDetail extends Model
     }
 
     /**
-     * Get the product that owns the transaction detail.
+     * Relasi dengan product
      */
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    /**
+     * Calculate subtotal automatically
+     */
+    protected static function booted()
+    {
+        static::saving(function ($transactionDetail) {
+            $transactionDetail->subtotal = $transactionDetail->quantity * $transactionDetail->harga_satuan;
+        });
     }
 }

@@ -9,32 +9,27 @@ class Product extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
-        'code',
-        'name',
-        'category',
-        'stock',
-        'purchase_price',
-        'selling_price',
+        'kode_produk',
+        'nama_produk',
+        'kategori',
+        'stok',
+        'harga_beli',
+        'harga_jual',
+        'deskripsi',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'purchase_price' => 'decimal:2',
-        'selling_price' => 'decimal:2',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'harga_beli' => 'decimal:2',
+            'harga_jual' => 'decimal:2',
+            'stok' => 'integer',
+        ];
+    }
 
     /**
-     * Get the transaction details for the product.
+     * Relasi dengan transaction details
      */
     public function transactionDetails()
     {
@@ -42,10 +37,27 @@ class Product extends Model
     }
 
     /**
-     * Get the transactions for the product through transaction details.
+     * Get profit margin
      */
-    public function transactions()
+    public function getProfitMargin()
     {
-        return $this->hasManyThrough(Transaction::class, TransactionDetail::class);
+        return $this->harga_jual - $this->harga_beli;
+    }
+
+    /**
+     * Get profit percentage
+     */
+    public function getProfitPercentage()
+    {
+        if ($this->harga_beli == 0) return 0;
+        return (($this->harga_jual - $this->harga_beli) / $this->harga_beli) * 100;
+    }
+
+    /**
+     * Check if product is in stock
+     */
+    public function isInStock()
+    {
+        return $this->stok > 0;
     }
 }

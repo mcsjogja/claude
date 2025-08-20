@@ -13,13 +13,18 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->string('code', 50)->unique();
-            $table->string('name', 150);
-            $table->string('category', 100);
-            $table->integer('stock')->default(0);
-            $table->decimal('purchase_price', 12, 2);
-            $table->decimal('selling_price', 12, 2);
+            $table->string('kode_produk')->unique();
+            $table->string('nama_produk');
+            $table->string('kategori');
+            $table->integer('stok')->default(0);
+            $table->decimal('harga_beli', 15, 2);
+            $table->decimal('harga_jual', 15, 2);
+            $table->text('deskripsi')->nullable();
             $table->timestamps();
+            
+            // Indexes
+            $table->index('kategori');
+            $table->index('nama_produk');
         });
     }
 

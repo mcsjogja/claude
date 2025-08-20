@@ -48,7 +48,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the transactions for the user.
+     * Relasi dengan transactions
      */
     public function transactions()
     {
@@ -56,7 +56,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Check if user has admin role.
+     * Check if user is admin
      */
     public function isAdmin()
     {
@@ -64,7 +64,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Check if user has kasir role.
+     * Check if user is kasir
      */
     public function isKasir()
     {
@@ -72,7 +72,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Check if user has pelanggan role.
+     * Check if user is pelanggan
      */
     public function isPelanggan()
     {

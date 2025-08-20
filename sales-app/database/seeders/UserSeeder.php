@@ -11,18 +11,27 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
+        // Admin user sesuai spesifikasi
         User::create([
-            "name" => "Administrator",
-            "email" => "admin@sales-app.com", 
-            "password" => Hash::make("password"),
-            "role" => "admin",
+            'name' => 'Admin',
+            'email' => 'admin@example.com',
+            'password' => Hash::make('password'),
+            'role' => 'admin',
+        ]);
+
+        // Additional users for testing
+        User::create([
+            'name' => 'Kasir 1',
+            'email' => 'kasir@example.com',
+            'password' => Hash::make('password'),
+            'role' => 'kasir',
         ]);
 
         User::create([
-            "name" => "Kasir 1",
-            "email" => "kasir@sales-app.com",
-            "password" => Hash::make("password"), 
-            "role" => "kasir",
+            'name' => 'Pelanggan Test',
+            'email' => 'pelanggan@example.com',
+            'password' => Hash::make('password'),
+            'role' => 'pelanggan',
         ]);
     }
 }

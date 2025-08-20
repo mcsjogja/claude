@@ -10,21 +10,20 @@ class Product extends Model
     use HasFactory;
 
     protected $fillable = [
-        'kode_produk',
-        'nama_produk',
-        'kategori',
-        'stok',
-        'harga_beli',
-        'harga_jual',
-        'deskripsi',
+        'code',
+        'name',
+        'category',
+        'stock',
+        'purchase_price',
+        'selling_price',
     ];
 
     protected function casts(): array
     {
         return [
-            'harga_beli' => 'decimal:2',
-            'harga_jual' => 'decimal:2',
-            'stok' => 'integer',
+            'purchase_price' => 'decimal:2',
+            'selling_price' => 'decimal:2',
+            'stock' => 'integer',
         ];
     }
 
@@ -41,7 +40,7 @@ class Product extends Model
      */
     public function getProfitMargin()
     {
-        return $this->harga_jual - $this->harga_beli;
+        return $this->selling_price - $this->purchase_price;
     }
 
     /**
@@ -49,8 +48,8 @@ class Product extends Model
      */
     public function getProfitPercentage()
     {
-        if ($this->harga_beli == 0) return 0;
-        return (($this->harga_jual - $this->harga_beli) / $this->harga_beli) * 100;
+        if ($this->purchase_price == 0) return 0;
+        return (($this->selling_price - $this->purchase_price) / $this->purchase_price) * 100;
     }
 
     /**
@@ -58,6 +57,6 @@ class Product extends Model
      */
     public function isInStock()
     {
-        return $this->stok > 0;
+        return $this->stock > 0;
     }
 }

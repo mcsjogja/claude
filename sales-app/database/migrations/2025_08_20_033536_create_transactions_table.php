@@ -12,19 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('transactions', function (Blueprint $table) {
-            $table->id();
-            $table->string('nomor_transaksi')->unique();
-            $table->enum('jenis_transaksi', ['penjualan', 'pembelian']);
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->decimal('total_amount', 15, 2);
-            $table->text('keterangan')->nullable();
-            $table->timestamp('tanggal_transaksi')->useCurrent();
+            $table->bigIncrements('id');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->enum('type', ['penjualan', 'pembelian']);
+            $table->decimal('total', 12, 2);
             $table->timestamps();
             
             // Indexes
-            $table->index('jenis_transaksi');
-            $table->index('tanggal_transaksi');
             $table->index('user_id');
+            $table->index('type');
         });
     }
 

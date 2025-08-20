@@ -13,7 +13,7 @@ class TransactionDetail extends Model
         'transaction_id',
         'product_id',
         'quantity',
-        'harga_satuan',
+        'price',
         'subtotal',
     ];
 
@@ -21,7 +21,7 @@ class TransactionDetail extends Model
     {
         return [
             'quantity' => 'integer',
-            'harga_satuan' => 'decimal:2',
+            'price' => 'decimal:2',
             'subtotal' => 'decimal:2',
         ];
     }
@@ -48,7 +48,7 @@ class TransactionDetail extends Model
     protected static function booted()
     {
         static::saving(function ($transactionDetail) {
-            $transactionDetail->subtotal = $transactionDetail->quantity * $transactionDetail->harga_satuan;
+            $transactionDetail->subtotal = $transactionDetail->quantity * $transactionDetail->price;
         });
     }
 }
